@@ -19,12 +19,6 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Find owning actor
-	AActor *door = GetOwner();
-	FRotator doorRotation = door->GetActorRotation();
-	doorRotation.Yaw -= 60;			// Open door 60 degrees outwards
-	door->SetActorRotation(doorRotation);
 	
 }
 
@@ -34,6 +28,38 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	// Poll the trigger volume every frame
+	// If the actor that opens is in the volume
+	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
+	{
+		OpenDoor();
+	}
+	// Close door when actor that opens leaves the trigger volume
+	else
+	{
+		CloseDoor();
+	}
+		
 }
 
+
+void UOpenDoor::OpenDoor()
+{
+	// Find owning actor
+	AActor *door = GetOwner();
+	FRotator doorRotation = door->GetActorRotation();
+	doorRotation.Yaw = OpenAngle;	// Open door by preset angle
+	door->SetActorRotation(doorRotation);
+
+	return;
+}
+
+void UOpenDoor::CloseDoor()
+{
+	AActor *door = GetOwner();
+	FRotator doorRotation = door->GetActorRotation();
+	doorRotation.Yaw = 0;	// Reset door to initial angle
+	door->SetActorRotation(doorRotation);
+
+	return;
+}

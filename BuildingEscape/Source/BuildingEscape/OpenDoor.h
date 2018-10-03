@@ -22,9 +22,13 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void OpenDoor();
+	void CloseDoor();
 
 private:
 	UPROPERTY(VisibleAnywhere)	// Will set the thing that follows it as a UPROPERTY variable
@@ -32,4 +36,8 @@ private:
 	
 	UPROPERTY(EditAnywhere)		// Allow us to edit this property anywhere
 		ATriggerVolume* PressurePlate;
+
+	UPROPERTY(EditAnywhere)
+		AActor* ActorThatOpens;	// Remember Pawn inherits from actor (Can also use APawn *)
+
 };
