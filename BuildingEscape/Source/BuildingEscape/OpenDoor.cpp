@@ -2,7 +2,7 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
-
+#include "Engine/World.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -20,6 +20,10 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Find player controller
+	// Can store pointer to a Pawn in ActorThatOpens which is a pointer to an actor
+	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
+
 }
 
 
