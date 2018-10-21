@@ -37,6 +37,11 @@ private:
 	UPROPERTY(EditAnywhere)		// Allow us to edit this property anywhere
 		ATriggerVolume* PressurePlate;
 
-	AActor* ActorThatOpens;	// Remember Pawn inherits from actor (Can also use APawn *)
+	UPROPERTY(EditAnywhere)
+		float DoorCloseDelay = 1.0f;
 
+	float LastDoorOpenTime;
+
+	AActor* ActorThatOpens;	// Remember Pawn inherits from actor (Can also use APawn *)
+	AActor* Owner;			// The owning door
 };

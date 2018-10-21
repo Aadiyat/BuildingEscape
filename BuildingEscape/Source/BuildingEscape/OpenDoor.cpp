@@ -22,6 +22,7 @@ void UOpenDoor::BeginPlay()
 	
 	// Find player controller
 	// Can store pointer to a Pawn in ActorThatOpens which is a pointer to an actor
+	Owner = GetOwner();
 	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 
 }
@@ -37,33 +38,25 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
 	{
 		OpenDoor();
+		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
 	}
 	// Close door when actor that opens leaves the trigger volume
-	else
+	else if(GetWorld()->GetTimeSeconds() >= LastDoorOpenTime+DoorCloseDelay)
 	{
 		CloseDoor();
 	}
-		
 }
 
 
 void UOpenDoor::OpenDoor()
 {
-	// Find owning actor
-	AActor *door = GetOwner();
-	FRotator doorRotation = door->GetActorRotation();
-	doorRotation.Yaw = OpenAngle;	// Open door by preset angle
-	door->SetActorRotation(doorRotation);
-
+	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
 	return;
 }
 
 void UOpenDoor::CloseDoor()
 {
-	AActor *door = GetOwner();
-	FRotator doorRotation = door->GetActorRotation();
-	doorRotation.Yaw = 0;	// Reset door to initial angle
-	door->SetActorRotation(doorRotation);
+	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 
 	return;
 }
