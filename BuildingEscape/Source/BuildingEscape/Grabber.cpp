@@ -34,7 +34,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-	// Get the player viewpoint this tick
+	/// Get the player viewpoint this tick
 	FVector ViewPointLocation;
 	FRotator ViewPointRotation;
 
@@ -42,8 +42,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 			OUT ViewPointLocation, OUT ViewPointRotation
 		);
 
-	/*UE_LOG(LogTemp, Warning, TEXT("Locaton: %s | Rotation: %s."),
-			*ViewPointLocation.ToString(), *ViewPointRotation.ToString());*/
+	
 
 	// Draw a red trace out in the world to visualise
 	// End point of trace line (must be relative to origin, perform vector calculation
@@ -60,8 +59,25 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		0.f,
 		0.f,
 		10);
-	// Raycast out to reach distance (private variable to store reach)
-	// Say what we hit
+	/// Setup query parameters
+	
+	FCollisionQueryParams TraceParameters(FName(TEXT("")), false, GetOwner());
 
+	/// Raycast out to reach distance (private variable to store reach)
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		ViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParameters
+	);
+	/// Say what we hit
+	AActor *ActorHit = Hit.GetActor();
+	if (ActorHit) {
+		UE_LOG(LogTemp, Warning, TEXT("Line Trace Hit: %s"), *(ActorHit->GetName()));
+	}
+	
+	
 }
 
